@@ -5,47 +5,39 @@ Import GpioCore.cs to your project
 
 ### Usage
 
-#### First create a GpioCore object
-```
-GpioCore gpio = new GpioCore();
-```
-
-
 #### Choose which pins to open
 ```
 // In this example we'll open pin nr 26
-gpio.Open(26);
+GpioCore.Open(26);
 ```
 
 
 #### Set the pin to either listen or send signals (direction)
 ```
 // We set pin 26 to send signals
-gpio.Out(26);
+GpioCore.Out(26);
 
 // And from here we set the pin to listen for signals.
-gpio.In(26);
+GpioCore.In(26);
 ```
 
 
 #### Set the pin to either be HIGH or LOW, ON/OFF (value)
 ```
 // Set the pin on high (Send signal)
-gpio.High(26);
+GpioCore.High(26);
 
 // Set the pin on low (Stop signal)
-gpio.Low(26);
+GpioCore.Low(26);
 ```
 
 
 ### Console application example
 ```
-GpioCore gpio = new GpioCore();
-
 Console.WriteLine("Which pin would you like to turn on?");
 int pin = int.Parse(Console.ReadLine());
 
-gpio.Open(pin);
-gpio.Out(pin);
-gpio.High(pin);
+GpioCore.Open(pin);
+GpioCore.Out(pin);
+GpioCore.High(pin);
 ```
