@@ -85,20 +85,17 @@ namespace PetBot
  
         }
 
-        public static void ScanOpenPins()
-        {
-            //Dont use yet, not functional due to random pin layout
-            Console.WriteLine("Scanning for open pins...");
-            for(int i = 1; i <= 40; i++)
+        public static bool Read(int pinid)
+        { 
+            //Works as long as there is a signal to the pin (1)
+            //When the signal is gone, the value drops to 0 = trigger
+            if (Directory.Exists("/sys/class/gpio/gpio" + pinid))
             {
-                if (Directory.Exists("/sys/class/gpio/gpio" + i))
-                {
-                    Console.Write("Gpio Pin " + i );
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(" OPEN");
-                    Console.ResetColor();
-                }
+                string value = File.ReadAllText("/sys/class/gpio/gpio" + pinid.ToString() + "/value");
+
+                if(value.Contains("0")) { return true;}
             }
+            return false;
         }
     }
 }
