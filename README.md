@@ -8,10 +8,10 @@ Import GpioCore.cs to your project
 #### Choose which pins to open
 ```c#
 // In this example we'll create a GpioCore object
-// As default this will just open up the pin and set it to send signals with a LOW value (0)
+// As default this will just open up the pin and set it to send signals with a value set to LOW (0)
 var pin26 = new GpioCore(26);
 
-// This way we both open the pin, set the pin to send signals (OUT) with a value set to Low (0)
+// This way we both open the pin, set the pin to send signals (OUT) with a value set to LOW (0)
 var pin26 = new GpioCore(26, GpioCore.OUT, GpioCore.LOW);
 
 // Once the object is created you can either Open() or Close() it later on
@@ -23,7 +23,7 @@ pin26.Close();
 #### Set the pin to either listen or send signals (direction)
 ```c#
 // If you have used the first example above and want to change the direction, 
-// you can change this by calling either the In() or Out()
+// you can change it by calling either the In() or Out()
 
 // Changing the pin to listen to signals
 pin26.In();
