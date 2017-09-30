@@ -1,101 +1,118 @@
+// Follow this project on Github https://github.com/sahinbosnic/GpioCore
+// Contributors: 
+// { Sahin Bosnic : sahin@bosnic.se }
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace PetBot
+namespace GpioCore
 {
     public class GpioCore
     {
-        public static void Open(int pinid)
+        public int PinId { get; set; }
+        public string Direction { get; set; }
+        public int Value { get; set; }
+
+        public const string IN = "in";
+        public const string OUT = "out";
+        public const int HIGH = 1;
+        public const int LOW = 0;
+
+        //Constructor, build and opens up pins
+        public GpioCore(int pinId, string direction = OUT, int value = LOW)
         {
-            if (!Directory.Exists("/sys/class/gpio/gpio" + pinid))
+            PinId = pinId;
+            Direction = direction;
+            Value = value;
+
+            //Check if gpio pin is already open
+            if (!Directory.Exists($"/sys/class/gpio/gpio{PinId}"))
             {
-                Console.WriteLine("...about to open pin " + pinid);
-                File.WriteAllText("/sys/class/gpio/export", pinid.ToString());
+                Console.WriteLine($"Opening pin {PinId}");
+                File.WriteAllText("/sys/class/gpio/export", PinId.ToString());
+
+                //Set direction
+                if (Direction == OUT) { Out(); }
+                else if (Direction == IN) { In(); }
+
+                //Set value
+                if (Value == HIGH) { High(); }
+                else if (Value == LOW) { Low(); }
             }
-            else if (!Directory.Exists("/sys/class/gpio/gpio" + pinid))
+            else if (!Directory.Exists($"/sys/class/gpio/gpio{PinId}"))
             {
-                Console.WriteLine("...pin " + pinid + " is already open");
+                Console.WriteLine($"Pin {PinId} is already open, try configuring it instead");
             }
         }
 
-        public static void Close(int pinid)
+        // Should be open after object init as default
+        //Open pin
+        public void Open()
         {
-            if (Directory.Exists("/sys/class/gpio/gpio" + pinid))
-            {
-                Console.WriteLine("...about to close pin " + pinid);
-                File.WriteAllText("/sys/class/gpio/unexport", pinid.ToString());
-            }
-            else if (!Directory.Exists("/sys/class/gpio/gpio" + pinid))
-            {
-                Console.WriteLine("...pin " + pinid + " is already closed");
-            }
+            Console.WriteLine($"Opening pin {PinId}");
+            File.WriteAllText("/sys/class/gpio/export", PinId.ToString());
         }
 
-        public static void High(int pinid)
+        //Close pin
+        //MAKE SURE TO DISPOSE THE OBJECT, Once closed the other functions might cause crashes if used
+        //If you still need the pin, try setting the value to LOW instead
+        public void Close()
         {
-            if (Directory.Exists("/sys/class/gpio/gpio" + pinid))
-            {
-                //Set value 1
-                File.WriteAllText("/sys/class/gpio/gpio" + pinid.ToString() + "/value", 1.ToString());
-            }
-            else if (!Directory.Exists("/sys/class/gpio/gpio" + pinid))
-            {
-                Console.WriteLine("Error.. cant change value, " + pinid + " is closed");
-            }
-        }
-        public static void Low(int pinid)
-        {
-            if (Directory.Exists("/sys/class/gpio/gpio" + pinid))
-            {
-                //Set value 0
-                File.WriteAllText("/sys/class/gpio/gpio" + pinid.ToString() + "/value", 0.ToString());
-            }
-            else if (!Directory.Exists("/sys/class/gpio/gpio" + pinid))
-            {
-                Console.WriteLine("Error.. cant change value, " + pinid + " is closed");
-            }
+            Console.WriteLine($"Closing pin {PinId}");
+            File.WriteAllText("/sys/class/gpio/unexport", PinId.ToString());
         }
 
-        public static void In(int pinid)
+        //Set pin value to HIGH (1)
+        public void High()
         {
-            if (Directory.Exists("/sys/class/gpio/gpio" + pinid))
-            {
-                //Set direction 'in'
-                File.WriteAllText("/sys/class/gpio/gpio" + pinid.ToString() + "/direction", "in");
-            }
-            else if (!Directory.Exists("/sys/class/gpio/gpio" + pinid))
-            {
-                Console.WriteLine("Error.. cant change direction, " + pinid + " is closed");
-            }
+            Console.WriteLine($"Seting pin {PinId} value to HIGH");
+            File.WriteAllText($"/sys/class/gpio/gpio{PinId}/value", HIGH.ToString());
+            Value = HIGH;
         }
 
-        public static void Out(int pinid)
+        //Set pin value to LOW (0)
+        public void Low()
         {
-            if (Directory.Exists("/sys/class/gpio/gpio" + pinid))
-            {
-                //Set direction 'out'
-                File.WriteAllText("/sys/class/gpio/gpio" + pinid.ToString() + "/direction", "out");
-            }
-            else if (!Directory.Exists("/sys/class/gpio/gpio" + pinid))
-            {
-                Console.WriteLine("Error.. cant change direction, " + pinid + " is closed");
-            }
- 
+            Console.WriteLine($"Seting pin {PinId} value to LOW");
+            File.WriteAllText($"/sys/class/gpio/gpio{PinId}/value", LOW.ToString());
+            Value = LOW;
         }
 
-        public static bool Read(int pinid)
-        { 
-            //Works as long as there is a signal to the pin (1)
-            //When the signal is gone, the value drops to 0 = trigger
-            if (Directory.Exists("/sys/class/gpio/gpio" + pinid))
-            {
-                string value = File.ReadAllText("/sys/class/gpio/gpio" + pinid.ToString() + "/value");
+        //Set pin direction to IN
+        public void In()
+        {
+            Console.WriteLine($"Seting pin {PinId} Direction to In");
+            File.WriteAllText($"/sys/class/gpio/gpio{PinId}/direction", IN);
+            Direction = IN;
+        }
 
-                if(value.Contains("0")) { return true;}
-            }
-            return false;
+        //Set pin direction to OUT
+        public void Out()
+        {
+            Console.WriteLine($"Seting pin {PinId} Direction to Out");
+            File.WriteAllText($"/sys/class/gpio/gpio{PinId}/direction", OUT);
+            Direction = OUT;
+        }
+
+        //Read value from pin, either 0 or 1
+        public bool Read()
+        {
+            string value = File.ReadAllText($"/sys/class/gpio/gpio{PinId}/value");
+
+            //Maybe not the fastest solution, but works for now..
+            if (value.Contains("0")) { return false; }
+
+            return true;
+        }
+
+        //Deconstructor to dispose the object and close the pin properly
+        ~GpioCore()
+        {
+            //Close pin to avoid unnecessary bugs or errors
+            Close();
+            Console.WriteLine($"Deconstructor has cleaned up and closed pin {PinId}");
         }
     }
 }
