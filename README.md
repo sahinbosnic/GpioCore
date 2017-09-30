@@ -22,7 +22,8 @@ pin26.Close();
 
 #### Set the pin to either listen or send signals (direction)
 ```c#
-// If you have used the first example above and want to change the direction, you can change this by calling either the In() or Out()
+// If you have used the first example above and want to change the direction, 
+// you can change this by calling either the In() or Out()
 
 // Changing the pin to listen to signals
 pin26.In();
