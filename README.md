@@ -6,7 +6,7 @@ Import GpioCore.cs to your project
 ### Usage
 
 #### All suported pins, directions and values are stored in an Enums
-```
+```c#
 // Target Gpio pin nr 26
 Pin.Gpio26;
 
@@ -20,7 +20,7 @@ pinStatus.High;
 ```
 
 #### Choose which pins to open
-```
+```c#
 // In this example we'll create a GpioCore object
 // As default this will just open up the pin and set it to send signals with a LOW value (0)
 var pin26 = new GpioCore(Pin.Gpio26);
@@ -35,8 +35,9 @@ pin26.Close();
 
 
 #### Set the pin to either listen or send signals (direction)
-```
-// If you have used the first example above and want to change the direction, you can change this by calling either the In() or Out()
+```c#
+// If you have used the first example above and want to change the direction, 
+// you can change it by calling either the In() or Out()
 
 // Changing the pin to listen to signals
 pin26.In();
@@ -47,7 +48,7 @@ pin26.Out();
 
 
 #### Set the pin to either be HIGH or LOW  (value)
-```
+```c#
 // Set the pin on High (1)
 pin26.High();
 
@@ -55,8 +56,8 @@ pin26.High();
 pin26.Low();
 ```
 
-### Reading from a pin
-```
+#### Reading from a pin
+```c#
 // This function is currently under testing and might not work as intentioned
 
 // Check if the pin returns a value (true/false)
@@ -74,8 +75,8 @@ if (!pin26.Read())
 ```
 
 
-### Console application example
-```
+#### Console application example
+```c#
 // Create the object
 var pin26 = new GpioCore(Pin.Gpio26, Direction.In);
 
@@ -83,7 +84,7 @@ var pin26 = new GpioCore(Pin.Gpio26, Direction.In);
 bool loop = true;
 while (loop)
 {
-    if if(pin26.Read())
+    if (pin26.Read())
     {
         // Break the loop
         Console.WriteLine("We got a signal!");
