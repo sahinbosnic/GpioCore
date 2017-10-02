@@ -5,7 +5,7 @@ Import GpioCore.cs to your project
 
 ### Usage
 
-#### All suported pins, directions and values are stored in an Enums
+#### All suported pins, directions and values are stored in Enums
 ```c#
 // Target Gpio pin nr 26
 Pin.Gpio26;
