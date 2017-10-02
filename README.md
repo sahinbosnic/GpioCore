@@ -5,14 +5,28 @@ Import GpioCore.cs to your project
 
 ### Usage
 
+#### All suported pins, directions and values are stored in an Enums
+```
+// Target Gpio pin nr 26
+Pin.Gpio26;
+
+// Directions In or Out
+Direction.In;
+Direction.Out;
+
+// Values can either be Low or High (0/1)
+PinStatus.Low;
+pinStatus.High;
+```
+
 #### Choose which pins to open
 ```
 // In this example we'll create a GpioCore object
 // As default this will just open up the pin and set it to send signals with a LOW value (0)
-var pin26 = new GpioCore(26);
+var pin26 = new GpioCore(Pin.Gpio26);
 
 // This way we both open the pin, set the pin to send signals (OUT) with a value set to Low (0)
-var pin26 = new GpioCore(26, GpioCore.OUT, GpioCore.LOW);
+var pin26 = new GpioCore(Pin.Gpio26, Direction.Out, PinStatus.Low);
 
 // Once the object is created you can either Open() or Close() it later on
 pin26.Open();
@@ -63,7 +77,7 @@ if (!pin26.Read())
 ### Console application example
 ```
 // Create the object
-var pin26 = new GpioCore(26, GpioCore.IN);
+var pin26 = new GpioCore(Pin.Gpio26, Direction.In);
 
 // Loop until you find a signal
 bool loop = true;

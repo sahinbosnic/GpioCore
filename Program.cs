@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace GpioCore
 {
@@ -7,18 +8,18 @@ namespace GpioCore
         static void Main(string[] args)
         {
             bool menu = true;
-            var pin26 = new GpioCore(26, GpioCore.OUT, GpioCore.LOW);
+
+            var pin26 = new GpioCore(Pin.Gpio26);
             
             while (menu)
             {
-                Console.WriteLine("1. Reinstantiate GpioCore object on pin 26");
+                Console.WriteLine("1. Write out pin info");
                 Console.WriteLine("2. Open pin 26");
                 Console.WriteLine("3. Close pin 26");
                 Console.WriteLine("4. Set pin 26 as HIGH");
                 Console.WriteLine("5. Set pin 26 as LOW");
-                Console.WriteLine("5. Set pin 26 as IN");
-                Console.WriteLine("5. Set pin 26 as OUT");
-                Console.WriteLine("8. Write out info");
+                Console.WriteLine("6. Set pin 26 as IN");
+                Console.WriteLine("7. Set pin 26 as OUT");               
                 Console.WriteLine("press any other key to quit");
                 try
                 {
@@ -26,7 +27,9 @@ namespace GpioCore
                     switch (key)
                     {
                         case 1:
-                            pin26 = new GpioCore(26, GpioCore.OUT, GpioCore.LOW);
+                            Console.WriteLine(pin26.pinId);
+                            Console.WriteLine(pin26.pinDirection);
+                            Console.WriteLine(pin26.pinState);
                         break;
 
                         case 2:
@@ -53,19 +56,13 @@ namespace GpioCore
                             pin26.Out();
                         break;
 
-                        case 8:
-                            Console.WriteLine(pin26.PinId.ToString());
-                            Console.WriteLine(pin26.Direction);
-                            Console.WriteLine(pin26.Value.ToString());
-                        break;
-
                         default:
                             menu = false;
                         break;
                     }
                 }
                 catch (Exception ex)
-                {
+                {                    
                     Console.WriteLine(ex.ToString());
                 }
             }
